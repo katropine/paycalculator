@@ -1,13 +1,13 @@
 Assumptions
 =============
-Input data has always the same format (spaces) in the CSV,
+Input data has always the same format as in tests/data/input.csv,
 Calculations required are done per calendar month,
 Dates in the input csv do not effect the calculation,
 Using 2012/2013 Financial year tax table 
 
 Install libs
 ==================
-```composer update``
+```composer update```
 
 How to run the test
 ===============
