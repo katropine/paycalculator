@@ -11,21 +11,29 @@ use Kriss\Paycalculator\Model\Payee;
 use Kriss\Paycalculator\Model\TaxGrade;
 
 $year = '2012';
+$taxTableData = [
+    ['start' => 0, 'end' => 18200, 'tax' => 0],
+    ['start' => 18201, 'end' => 37000, 'tax' => 19],
+    ['start' => 37001, 'end' => 80000, 'tax' => 32.5],
+    ['start' => 80001, 'end' => 180000, 'tax' => 37],
+    ['start' => 180001, 'end' => null, 'tax' => 45],
+];
 
-if (isset($_POST) && isset($_FILES['csvinput'])) {
+if (isset($_POST['submit']) && isset($_FILES['csvinput'])) {
 
     $taxTable = [];
     $input = [];
 
-    foreach ($_POST['start'] as $k => $v) {
-        $tg = new TaxGrade();
-        $tg->setStartPrice((int) $v);
-        $tg->setEndPrice((int) $_POST['end'][$k]);
-        $tg->setTax((float) $_POST['tax'][$k] / 100);
-        $taxTable[] = $tg;
+
+    foreach ($taxTableData as $row) {
+        $tax = new TaxGrade();
+        $tax->setStartPrice($row['start']);
+        $tax->setEndPrice($row['end']);
+        $tax->setTax($row['tax'] / 100);
+
+        $taxTable[] = $tax;
     }
 
-    //var_dump($_FILES['csvinput']); exit;
     $csv = array_map('str_getcsv', file($_FILES['csvinput']['tmp_name']));
     foreach ($csv as $k => $row) {
         if ($k > 0) {
@@ -92,68 +100,26 @@ if (isset($_POST) && isset($_FILES['csvinput'])) {
                         </td>
                         <td>
                             Tax table:
-                            <table>
+                            <table class="table table-bordered">
+                                <?php foreach ($taxTableData as $taxRate): ?>
                                 <tr>
                                     <td>
-                                        <input class="form-control" type="text" name="start[]" value="0"> 
+                                        <?php echo $taxRate['start'];?> 
                                     </td>
                                     <td>
-                                        <input class="form-control" type="text" name="end[]" value="18200">
+                                        <?php echo $taxRate['end'];?>
                                     </td>
                                     <td>
-                                        <input class="form-control" type="text" name="tax[]" value="0">
+                                        <?php echo $taxRate['tax'];?>%
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <input class="form-control" type="text" name="start[]" value="18201"> 
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="end[]" value="37000">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="tax[]" value="19">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input class="form-control" type="text" name="start[]" value="37001"> 
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="end[]" value="80000">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="tax[]" value="32.5">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input class="form-control" type="text" name="start[]" value="80001"> 
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="end[]" value="180000">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="tax[]" value="37">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input class="form-control" type="text" name="start[]" value="180001"> 
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="end[]" value="">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text" name="tax[]" value="45">
-                                    </td>
-                                </tr>
+                                <?php endforeach;?>
                             </table>
 
                         </td>
                     </tr>
                     <tr>
-                        <td><input class="btn btn-default" type="submit" value="Calculate"></td>
+                        <td><input class="btn btn-default" type="submit"name="submit" value="Calculate"></td>
                     </tr>
                 </table>
             </form>
