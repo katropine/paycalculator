@@ -3,14 +3,14 @@ Assumptions
 Input data has always the same format (spaces) in the CSV,
 Calculations required are done per calendar month,
 Dates in the input csv do not effect the calculation,
+Using 2012/2013 Financial year tax table 
 
+Install libs
+==================
+```composer update``
 
 How to run the test
 ===============
-Run:
-
-composer update
-
 cd tests
 
 phpunit Test
