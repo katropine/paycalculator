@@ -19,12 +19,13 @@ class Test extends \PHPUnit_Framework_TestCase{
     public function setUp(){
         
         $csv = array_map('str_getcsv', file('./data/input.csv'));
+        $year = '2012';
         foreach ($csv as $k=>$row) {
             if ($k > 0) {
                 $date = explode('-', $row[4]);
                 
-                $startDate = new \DateTime(rtrim($date[0])." 2012");
-                $endDate = new \DateTime(ltrim($date[1])." 2012");
+                $startDate = new \DateTime(rtrim($date[0])." {$year}");
+                $endDate = new \DateTime(ltrim($date[1])." {$year}");
                 $super = str_replace('%', '', $row[3]) / 100;
                 
                 $person = new Payee();

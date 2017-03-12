@@ -35,17 +35,19 @@ class Calculator {
         
         $accumulatedTax = 0;
         $taxPerMonth = 0;
-    
+
         $grossPerMonth = round($payee->getAnnualSalary() / 12);
         $superPerMonth = round($grossPerMonth * $payee->getSuper());
         
         $lastTopEndPrice = 0;
         foreach ($this->taxTable as $taxClass) {
             if (!$taxClass->getEndPrice() || ($taxClass->getEndPrice() > $payee->getAnnualSalary())) {
+                // top chunk of the income.
                 $taxPerMonth = round(($accumulatedTax + ($payee->getAnnualSalary() - $lastTopEndPrice) * $taxClass->getTax())/12);
                 break;
             } else {
-                $accumulatedTax +=  $taxClass->calculateTax();
+                // tax so far
+                $accumulatedTax += $taxClass->calculateTax();
                 $lastTopEndPrice = $taxClass->getEndPrice();
             }
         }
